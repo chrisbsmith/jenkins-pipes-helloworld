@@ -19,8 +19,8 @@ items:
       jenkinsPipelineStrategy:
         jenkinsfilePath: Jenkinsfile
     triggers:
-    - type: GitHub
+      type: "GitHub"
       github:
         secret: FiArdDBH
-      
+            
     
