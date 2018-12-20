@@ -1,5 +1,6 @@
 FROM golang:1.11-alpine
 COPY hello-world.go /go/src/hello-world/hello-world.go
+WORKDIR /go/src/hello-world
 RUN go build -tags netgo
 
 FROM scratch
