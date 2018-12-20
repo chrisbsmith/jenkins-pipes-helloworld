@@ -11,7 +11,7 @@ node {
     //   hw.push("openshift")
     // }
     stage('deploy') {
-      oc apply -f hello-world.yaml
+      sh 'oc apply -f hello-world.yaml'
     }
   } finally {
     stage('cleanup') {
