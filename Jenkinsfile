@@ -7,10 +7,8 @@ node {
     stage('prepare') {
       sh "git clean -fdx"
     }
-    stage('compile') {
-      hw = docker.build{"chrismith/hello-world:openshift"}
-    }
-    stage('push') {
+    stage('build and push') {
+      def hw = docker.build{"chrismith/hello-world:openshift"}
       hw.push()
     }
     stage('deploy') {
