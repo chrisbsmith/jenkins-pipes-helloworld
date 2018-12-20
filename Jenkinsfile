@@ -7,16 +7,13 @@ node {
       sh "git clean -fdx"
     }
     stage('compile') {
-      echo "nothing to compile for hello.sh..."
+      docker build -t chrismith/hello-world:openshift
     }
-    stage('test') {
-      sh "./test_hello.sh"
+    stage('push') {
+      docker push chrismith/hello-world:openshift
     }
-    stage('package') {
-      sh "tar -cvzf hello.tar.gz hello.sh"
-    }
-    stage('publish') {
-      echo "uploading package..."
+    stage('deploy') {
+      oc apply -f hello-world.yaml
     }
   } finally {
     stage('cleanup') {

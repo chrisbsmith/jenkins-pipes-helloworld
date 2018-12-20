@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    openshift.io/scc: anyuid
+  labels:
+    name: hello-world
+  name: hello-world
+  namespace: openvpn
+spec:
+  containers:
+    - image: chrismith/hello-world:openshift
+      imagePullPolicy: IfNotPresent
+      name: hello-world
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+      resources: {}
+  restartPolicy: Always
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+
