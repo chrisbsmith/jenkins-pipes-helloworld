@@ -6,7 +6,7 @@ items:
   kind: BuildConfig
   metadata:
     annotations:
-      pipeline.alpha.openshift.io/uses: '[{"name": "helloworld", "namespace": "", "kind": "DeploymentConfig"}]'
+      pipeline.alpha.openshift.io/uses: '[{"name": "hellowworld", "namespace": "", "kind": "DeploymentConfig"}]'
     name: hello-world-pipeline
   spec:
     source:
@@ -19,8 +19,7 @@ items:
       jenkinsPipelineStrategy:
         jenkinsfilePath: Jenkinsfile
     triggers:
-      type: "GitHub"
-      github:
-        secret: --
-            
-    
+    - github:
+        secretReference: 
+          name: githubsecret
+      type: GitHub
