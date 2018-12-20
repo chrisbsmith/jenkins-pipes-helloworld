@@ -11,7 +11,7 @@ items:
   spec:
     source:
       git:
-        ref: pipeline
+        ref: master
         uri: https://github.com/chrisbsmith/jenkins-pipes-helloworld.git
       type: Git
     strategy:
