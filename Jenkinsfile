@@ -1,4 +1,5 @@
 node {
+  def hw
   try {
     stage('checkout') {
       checkout scm
@@ -7,10 +8,10 @@ node {
       sh "git clean -fdx"
     }
     stage('compile') {
-      docker build -t chrismith/hello-world:openshift
+      hw = docker.build{"chrismith/hello-world:openshift"}
     }
     stage('push') {
-      docker push chrismith/hello-world:openshift
+      hw.push()
     }
     stage('deploy') {
       oc apply -f hello-world.yaml
