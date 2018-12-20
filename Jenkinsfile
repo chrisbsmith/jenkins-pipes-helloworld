@@ -1,5 +1,4 @@
 node {
-  def hw
   try {
     stage('checkout') {
       checkout scm
