@@ -21,6 +21,6 @@ items:
     triggers:
       type: "GitHub"
       github:
-        secret: FiArdDBH
+        secret: --
             
     
