@@ -1,19 +1,19 @@
 node {
   try {
-    stage('checkout') {
+    stage('Checkout') {
       checkout scm
     }
-    stage('prepare') {
+    stage('Prepare') {
       sh "git clean -fdx"
     }
-    stage('build image') {
+    stage('Build Image') {
       sh "oc new-build hello-world --from-file=Dockerfile --follow"
     }
-    stage('deploy') {
+    stage('Deploy') {
       sh 'oc apply -f hello-world.yaml'
     }
   } finally {
-    stage('cleanup') {
+    stage('Cleanup') {
       echo "doing some cleanup..."
     }
   }
