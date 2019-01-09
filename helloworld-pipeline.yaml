@@ -1,26 +1,22 @@
-apiVersion: v1
-kind: List
-metadata: {}
-items:
-- apiVersion: v1
-  kind: BuildConfig
-  metadata:
-    annotations:
-      pipeline.alpha.openshift.io/uses: '[{"name": "hello-world", "namespace": "", "kind": "DeploymentConfig"}]'
-    name: hello-world-pipeline
-  spec:
-    source:
-      git:
-        ref: master
-        uri: https://github.com/chrisbsmith/jenkins-pipes-helloworld.git
-      type: Git
-    strategy:
-      type: JenkinsPipeline
-      jenkinsPipelineStrategy:
-        jenkinsfilePath: Jenkinsfile
-    output:
-      to:
-        kind: "DockerImage"
-        name: "chrismith/hello-world:openshift"
-      pushSecret:
-        name: "dockerhub"
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    pipeline.alpha.openshift.io/uses: '[{"name": "hello-world-pipeline", "namespace": "", "kind": "DeploymentConfig"}]'
+  name: hello-world-pipeline
+spec:
+  source:
+    git:
+      ref: master
+      uri: https://github.com/chrisbsmith/jenkins-pipes-helloworld.git
+    type: Git
+  strategy:
+    type: JenkinsPipeline
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: Jenkinsfile
+  output:
+    pushSecret:
+      name: dockerhub
+    to:
+      kind: DockerImage
+      name: docker.io/chrismith/hello-world:openshift

@@ -12,7 +12,8 @@ node {
       sh "oc start-build hello-world --from-dir . --follow"
     }
     stage('Deploy') {
-      sh 'oc apply --force -f hello-world.yaml'
+      openshiftDeploy depCfg: 'hello-world'
+      openshiftVerifyDeployment depCfg: 'hello-world', replicaCount: 1, verifyReplicaCount: true
     }
   } finally {
     stage('Cleanup') {

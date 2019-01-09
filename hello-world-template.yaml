@@ -1,0 +1,119 @@
+apiVersion: v1
+kind: Template
+metadata:
+  annotations:
+    iconClass: icon-java
+  name: hello-world
+objects:
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      build: hello-world
+    name: hello-world
+    namespace: jenkins
+  spec:
+    failedBuildsHistoryLimit: 5
+    nodeSelector: null
+    output:
+      pushSecret:
+        name: dockerhub
+      to:
+        kind: DockerImage
+        name: chrismith/hello-world:openshift
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      binary: {}
+      type: Binary
+    strategy:
+      dockerStrategy:
+        from:
+          kind: DockerImage
+          name: golang:1.11-alpine
+      type: Docker
+    successfulBuildsHistoryLimit: 5
+    triggers:
+    - github:
+        secret: X6TNTkjSJxCz8dptiumW
+      type: GitHub
+    - generic:
+        secret: z2tlPSAoFZtBiT-9a0NF
+      type: Generic
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: hello-world
+    labels:
+      application: hello-world
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: hello-world
+    strategy:
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          application: hello-world
+          deploymentconfig: hello-world
+        name: hello-world
+      spec:
+        containers:
+        - env:
+          image: chrismith/hello-world:openshift
+          imagePullPolicy: Always
+          name: hello-world
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: 1
+            requests:
+              memory: 128Mi
+              cpu: 200m
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 75
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - hello-world
+        from:
+          kind: DockerImage
+          name: chrismith/hello-world:openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: hello-world
+      application: hello-world
+    name: hello-world
+  spec:
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: hello-world
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      application: hello-world
+    name: hello-world
+  spec:
+    to:
+      kind: Service
+      name: hello-world
+      weight: 100
