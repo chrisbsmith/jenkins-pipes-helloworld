@@ -10,7 +10,7 @@ metadata:
 spec:
   containers:
     - image: chrismith/hello-world:openshift
-      imagePullPolicy: IfNotPresent
+      imagePullPolicy: Always
       name: hello-world
       ports:
         - containerPort: 8080
