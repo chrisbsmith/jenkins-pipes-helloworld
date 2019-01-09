@@ -33,7 +33,8 @@ objects:
     successfulBuildsHistoryLimit: 5
     triggers:
     - github:
-        secret: X6TNTkjSJxCz8dptiumW
+        secretReference:
+          name: githubwebhook
       type: GitHub
     - generic:
         secret: z2tlPSAoFZtBiT-9a0NF

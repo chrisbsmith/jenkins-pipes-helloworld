@@ -20,3 +20,8 @@ spec:
     to:
       kind: DockerImage
       name: docker.io/chrismith/hello-world:openshift
+  triggers:
+    - github:
+        secretReference:
+          name: githubwebhook
+      type: GitHub
