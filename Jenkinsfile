@@ -12,7 +12,7 @@ node {
       sh "oc start-build hello-world --from-dir . --follow"
     }
     stage('Deploy') {
-      sh "oc rollout latest dc/hello-world"
+      sh "sleep30 && oc rollout latest dc/hello-world"
     }
   } finally {
     stage('Cleanup') {
