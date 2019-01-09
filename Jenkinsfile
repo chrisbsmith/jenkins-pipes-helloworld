@@ -7,7 +7,8 @@ node {
       sh "git clean -fdx"
     }
     stage('Build Image') {
-      sh "oc new-build --strategy docker --binary --docker-image golang:1.11-alpine --name hello-world"
+      // Need to put some logic here to determine if it is a new build or an existing build and skip this step if existing.
+      // sh "oc new-build --strategy docker --binary --docker-image golang:1.11-alpine --name hello-world"
       sh "oc start-build hello-world --from-file=Dockerfile --follow"
     }
     stage('Deploy') {
