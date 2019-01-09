@@ -12,8 +12,7 @@ node {
       sh "oc start-build hello-world --from-dir . --follow"
     }
     stage('Deploy') {
-      openshiftDeploy depCfg: 'hello-world'
-      openshiftVerifyDeployment depCfg: 'hello-world', replicaCount: 1, verifyReplicaCount: true
+      sh "oc rollout latest dc/hello-world"
     }
   } finally {
     stage('Cleanup') {

@@ -1,0 +1,36 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    build: hello-world
+  name: hello-world
+  namespace: jenkins
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    pushSecret:
+      name: dockerhub
+    to:
+      kind: DockerImage
+      name: chrismith/hello-world:openshift
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: golang:1.11-alpine
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - github:
+      secret: X6TNTkjSJxCz8dptiumW
+    type: GitHub
+  - generic:
+      secret: z2tlPSAoFZtBiT-9a0NF
+    type: Generic
