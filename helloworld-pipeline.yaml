@@ -18,8 +18,9 @@ items:
       type: JenkinsPipeline
       jenkinsPipelineStrategy:
         jenkinsfilePath: Jenkinsfile
-    triggers:
-    - github:
-        secretReference: 
-          name: mysecret
-      type: GitHub
+    output:
+      to:
+        kind: DockerImage
+        name: docker.io/chrismith/hello-world:openshift
+      pushSecret:
+        name: dockerhub

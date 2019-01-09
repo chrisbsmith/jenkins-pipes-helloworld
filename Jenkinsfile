@@ -6,10 +6,9 @@ node {
     stage('prepare') {
       sh "git clean -fdx"
     }
-    // stage('build and push') {
-    //   def hw = docker.build("chrismith/hello-world:openshift")
-    //   hw.push("openshift")
-    // }
+    stage('build image') {
+      sh "oc start-build --from-file=Dockerfile --follow"
+    }
     stage('deploy') {
       sh 'oc apply -f hello-world.yaml'
     }
