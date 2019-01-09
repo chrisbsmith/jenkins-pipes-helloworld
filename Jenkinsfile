@@ -12,7 +12,7 @@ node {
       sh "oc start-build hello-world --from-dir . --follow"
     }
     stage('Deploy') {
-      sh 'oc apply -f hello-world.yaml'
+      sh 'oc apply --force -f hello-world.yaml'
     }
   } finally {
     stage('Cleanup') {
