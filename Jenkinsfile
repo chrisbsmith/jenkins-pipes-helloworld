@@ -7,7 +7,7 @@ node {
       sh "git clean -fdx"
     }
     stage('build image') {
-      sh "oc start-build hellowworld --from-dir . --follow"
+      sh "oc new-build hello-world --from-file=Dockerfile --follow"
     }
     stage('deploy') {
       sh 'oc apply -f hello-world.yaml'

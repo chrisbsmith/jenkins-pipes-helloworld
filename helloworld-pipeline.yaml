@@ -6,7 +6,7 @@ items:
   kind: BuildConfig
   metadata:
     annotations:
-      pipeline.alpha.openshift.io/uses: '[{"name": "hellowworld", "namespace": "", "kind": "DeploymentConfig"}]'
+      pipeline.alpha.openshift.io/uses: '[{"name": "hello-world", "namespace": "", "kind": "DeploymentConfig"}]'
     name: hello-world-pipeline
   spec:
     source:
