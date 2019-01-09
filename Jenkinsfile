@@ -7,7 +7,7 @@ node {
       sh "git clean -fdx"
     }
     stage('build image') {
-      sh "oc start-build helloworld --from-dir . --follow"
+      sh "oc start-build hellowworld --from-dir . --follow"
     }
     stage('deploy') {
       sh 'oc apply -f hello-world.yaml'
