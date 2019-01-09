@@ -20,7 +20,7 @@ items:
         jenkinsfilePath: Jenkinsfile
     output:
       to:
-        kind: DockerImage
-        name: docker.io/chrismith/hello-world:openshift
+        kind: "DockerImage"
+        name: "chrismith/hello-world:openshift"
       pushSecret:
-        name: dockerhub
+        name: "dockerhub"
