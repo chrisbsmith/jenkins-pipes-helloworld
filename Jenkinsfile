@@ -1,4 +1,5 @@
-def tag = readFile('VERSION').trim()
+
+def tag
 
 node {
   try {
@@ -7,6 +8,7 @@ node {
     }
     stage('Prepare') {
       sh "git clean -fdx"
+      tag = readFile('VERSION').trim()
     }
     stage('Build Image') {
       // Need to put some logic here to determine if it is a new build or an existing build and skip this step if existing.
