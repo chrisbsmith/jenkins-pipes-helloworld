@@ -25,8 +25,8 @@ objects:
       pushSecret:
         name: dockerhub
       to:
-        kind: ImageStreamTag
-        name: hello-world:openshift
+        kind: DockerImage
+        name: docker.io/chrismith/hello-world:openshift
     triggers:
       - github:
           secretReference:
@@ -46,8 +46,8 @@ objects:
       pushSecret:
         name: dockerhub
       to:
-        kind: DockerImage
-        name: chrismith/hello-world:openshift
+        kind: ImageStreamTag
+        name: hello-world:openshift
     postCommit: {}
     resources: {}
     runPolicy: Serial
