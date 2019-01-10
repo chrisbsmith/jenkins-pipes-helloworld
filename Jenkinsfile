@@ -15,7 +15,7 @@ node {
       // sh "oc new-build --strategy docker --binary --docker-image golang:1.11-alpine --name hello-world"
       sh "oc start-build hello-world --from-dir . --follow"
       sh "oc whoami"
-      sh "oc image mirror docker-registry.default.svc:5000/jenkins/hello-world:openshift docker.io/chrismith/hello-world:${tag} --insecure=true"
+      sh "oc image mirror docker-registry.default.svc:5000/jenkins/hello-world:openshift docker.io/chrismith/hello-world:${tag} --insecure=true -n jenkins"
     }
     stage('Deploy') {
       sh "sleep 10 && oc rollout latest dc/hello-world"
