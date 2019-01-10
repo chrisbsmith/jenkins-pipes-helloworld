@@ -1,3 +1,5 @@
+def tag = readFile('VERSION').trim()
+
 node {
   try {
     stage('Checkout') {
@@ -12,7 +14,7 @@ node {
       sh "oc start-build hello-world --from-dir . --follow"
     }
     stage('Deploy') {
-      sh "sleep 30 && oc rollout latest dc/hello-world"
+      sh "sleep 10 && oc rollout latest dc/hello-world"
     }
   } finally {
     stage('Cleanup') {
