@@ -9,7 +9,7 @@ import (
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	response := os.Getenv("RESPONSE")
 	if len(response) == 0 {
-		response = "Hello World! Maybe this is the commit that actually works!"
+		response = "Hello World! This was overy complicated for a simple solution."
 	}
 
 	fmt.Fprintln(w, response)
