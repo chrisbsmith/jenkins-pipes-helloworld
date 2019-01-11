@@ -9,7 +9,7 @@ import (
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	response := os.Getenv("RESPONSE")
 	if len(response) == 0 {
-		response = "Hello World! And now with a sleep built in"
+		response = "Hello World! I'm trying to use the new openshift-jenkins-plugin"
 	}
 
 	fmt.Fprintln(w, response)
