@@ -20,7 +20,7 @@ node {
       
       println(env.USERNAME)
         }
-      withCredentials([file(credentialsId: 'jenkins-dockerhub-json', variable: 'DOCKERHUBCREDS ')]) {
+      withCredentials([file(credentialsId: 'jenkins-dockerhub-jsonfile', variable: 'DOCKERHUBCREDS ')]) {
         sh '''
           #!/bin/bash
           mkdir ~/.docker
