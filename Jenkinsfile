@@ -22,7 +22,7 @@ node {
           def build = openshift.startBuild("hello-world --from-dir .")
           build.untilEach{
             echo "phase = ${it.object().status.phase}"
-            return it.object().status.phase == "RUNNING"
+            return it.object().status.phase == "Running"
           }
           build.logs("-f")
 
