@@ -47,8 +47,8 @@ node {
         stage('Deploy') {
           // sh "sleep 10 && oc rollout latest dc/${name}"
           def dc = openshift.selector("dc", "${name}")
-          // dc.rollout().latest()
-          dc.rollout().status()
+          dc.rollout().latest()
+          // dc.rollout().status()
         }
       }
     }
