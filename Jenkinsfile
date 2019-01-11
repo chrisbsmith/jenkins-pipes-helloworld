@@ -21,7 +21,8 @@ node {
 
           def build = openshift.startBuild("hello-world --from-dir .")
           build.untilEach{
-            return it.object().status.phase == "Complete"
+            echo "phase = ${it.object().status.phase}"
+            return it.object().status.phase == "RUNNING"
           }
           build.logs("-f")
 
@@ -33,6 +34,7 @@ node {
           //   return it.object().status.phase == "Running"
           // }
           // bld.logs('-f') 
+
           // withCredentials([usernamePassword(credentialsId: 'jenkins-dockerhub-userpass',
           //                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 
