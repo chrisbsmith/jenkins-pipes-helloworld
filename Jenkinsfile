@@ -19,7 +19,12 @@ node {
 
           echo "I'm using the ${openshift.project()} project"
 
-          openshift.startBuild("hello-world --from-dir .")
+          def build = openshift.startBuild("hello-world --from-dir .")
+          build.untilEach{
+            return it.object().status.phase == "Complete"
+          }
+          build.logs("-f")
+
           // openshift.selector("bc", "hello-world").startBuild("--from-dir .")
 
           // def bld = openshift.startBuild("hello-world") --from-dir . --follow

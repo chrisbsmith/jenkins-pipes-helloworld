@@ -47,7 +47,7 @@ objects:
         name: dockerhub
       to:
         kind: DockerImage
-        name: chrismith/hello-world:openshift
+        name: dockerio/chrismith/hello-world:openshift
     postCommit: {}
     resources: {}
     runPolicy: Serial
