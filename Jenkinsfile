@@ -19,12 +19,14 @@ node {
 
           echo "I'm using the ${openshift.project()} project"
 
+          openshift.startBuild("hello-world" --from-dir . )
+
           // def bld = openshift.startBuild("hello-world") --from-dir . --follow
 
           // bld.untilEach {
           //   return it.object().status.phase == "Running"
           // }
-          bld.logs('-f') 
+          // bld.logs('-f') 
           // withCredentials([usernamePassword(credentialsId: 'jenkins-dockerhub-userpass',
           //                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 
