@@ -46,9 +46,10 @@ node {
           def dc = openshift.selector("dc", "${name}")
 
           def patcher = [spec:[template:[spec:[containers:[["name": "${name}", "image": "docker.io/chrismith/${name}:${tag}"]]]]]]
-          def patchCmd = ["oc", "patch", "dc", "hello-world", "-p", JsonOutput.toJson(patcher)]
+          def patchCmd = ["'", JsonOutput.toJson(patcher), "'"]
           println patchCmd.join(" ")
-          def patchProc = patchCmd.execute()
+          def patch = patchCmd.join(" ")
+          dc.patch(${patch})
           
           //
           // dc.patch("\"{'spec':{'template':{'spec':{'containers':[{'name': '${name}', 'image':'docker.io/chrismith/${name}:${tag}'}]}}}}\"")
