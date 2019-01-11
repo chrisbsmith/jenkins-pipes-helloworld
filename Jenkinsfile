@@ -16,7 +16,7 @@ node {
     openshift.withCluster() {
       openshift.withProject() {
         stage('Build Image') {
-          if (!openshift.selector("bc", "mapit").exists()) {
+          if (!openshift.selector("bc", "hello-world").exists()) {
           //  This should be the equivelant of the below lines that were initially executed
           // sh "oc new-build --strategy docker --binary --docker-image golang:1.11-alpine --name ${name}"
             def newBuild = openshift.newBuild("--name ${name}", "--strategy docker", "--binary")
