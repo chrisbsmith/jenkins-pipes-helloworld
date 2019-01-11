@@ -38,8 +38,9 @@ node {
             sh "oc image mirror docker.io/chrismith/${name}:openshift docker.io/chrismith/${name}:${tag}"
           }
         }
-        try {
+        
           stage('Deploy') {
+            try {
             def dc = openshift.selector("dc", "${name}")
             def patcher = [spec:[template:[spec:[containers:[["name": "${name}", "image": "docker.io/chrismith/${name}:${tag}"]]]]]]
             def patchCmd = ["'", JsonOutput.toJson(patcher), "'"]
@@ -47,8 +48,7 @@ node {
             def patch = patchCmd.join(" ")
             dc.patch("${patch}")
           }
-        }
-        catch (err) {
+          catch (err) {
           if (err.getMessage().contains('not patched')) {
             echo "Deployment was not patched"
             currentBuild.result = 'SUCCESS'
@@ -59,6 +59,8 @@ node {
             throw err
           }
         }
+        }
+        
       }
     }
   } 
