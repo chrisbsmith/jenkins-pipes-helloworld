@@ -1,3 +1,6 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
 def name = "hello-world"
 def tag
 
@@ -17,23 +20,23 @@ node {
           // sh "oc new-build --strategy docker --binary --docker-image golang:1.11-alpine --name ${name}"
           //sh "oc start-build ${name} --from-dir . --follow"
 
-          echo "I'm using the ${openshift.project()} project"
+          // echo "I'm using the ${openshift.project()} project"
 
-          def build = openshift.startBuild("${name} --from-dir .")
-          build.untilEach{
-            echo "phase = ${it.object().status.phase}"
-            return it.object().status.phase == "Complete"
-          }
-          build.logs("-f")
+          // def build = openshift.startBuild("${name} --from-dir .")
+          // build.untilEach{
+          //   echo "phase = ${it.object().status.phase}"
+          //   return it.object().status.phase == "Complete"
+          // }
+          // build.logs("-f")
 
-          withCredentials([file(credentialsId: 'jenkins-dockerhub-jsonfile', variable: 'DOCKERHUBCREDS')]) {
-            sh '''
-              #!/bin/bash
-              mkdir ~/.docker
-              cp ${DOCKERHUBCREDS} ~/.docker/config.json
-            '''
-            sh "oc image mirror docker.io/chrismith/${name}:openshift docker.io/chrismith/${name}:${tag}"
-          }
+          // withCredentials([file(credentialsId: 'jenkins-dockerhub-jsonfile', variable: 'DOCKERHUBCREDS')]) {
+          //   sh '''
+          //     #!/bin/bash
+          //     mkdir ~/.docker
+          //     cp ${DOCKERHUBCREDS} ~/.docker/config.json
+          //   '''
+          //   sh "oc image mirror docker.io/chrismith/${name}:openshift docker.io/chrismith/${name}:${tag}"
+          // }
             
           
         }
@@ -41,6 +44,11 @@ node {
         stage('Deploy') {
           // sh "sleep 10 && oc rollout latest dc/${name}"
           def dc = openshift.selector("dc", "${name}")
+
+          def patcher = [spec:[template:[spec:["containers":[{"name": "${name}", "image": "docker.io/chrismith/${name}:${tag}"}]]]]
+          def patchCmd = ["oc", "patch", "dc", hello-world, "-p", JsonOutput.toJson(patcher)]
+          println patchCmd.join(" ")
+          //
           dc.patch("\"{'spec':{'template':{'spec':{'containers':[{'name': '${name}', 'image':'docker.io/chrismith/${name}:${tag}'}]}}}}\"")
           dc.rollout().latest()
           // dc.rollout().status()
