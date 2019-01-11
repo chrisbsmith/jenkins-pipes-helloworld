@@ -87,7 +87,7 @@ objects:
         name: hello-world
       spec:
         containers:
-          - image: 'chrismith/hello-world:openshift'
+          - image: 'docker.io/chrismith/hello-world:openshift'
             imagePullPolicy: Always
             name: hello-world
             ports:
