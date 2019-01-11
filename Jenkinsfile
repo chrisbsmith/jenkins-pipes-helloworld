@@ -49,7 +49,7 @@ node {
           def patchCmd = ["'", JsonOutput.toJson(patcher), "'"]
           println patchCmd.join(" ")
           def patch = patchCmd.join(" ")
-          dc.patch(${patch})
+          dc.patch("${patch}")
           
           //
           // dc.patch("\"{'spec':{'template':{'spec':{'containers':[{'name': '${name}', 'image':'docker.io/chrismith/${name}:${tag}'}]}}}}\"")
