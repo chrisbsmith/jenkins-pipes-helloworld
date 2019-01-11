@@ -19,8 +19,8 @@ node {
           #!/bin/bash
           echo ${MYFILE} 
         '''
+        }
       }
-}
       //sh "oc image mirror docker.io/chrismith/hello-world:openshift docker.io/chrismith/hello-world:${tag}"
     }
     stage('Deploy') {
