@@ -45,12 +45,14 @@ node {
           // sh "sleep 10 && oc rollout latest dc/${name}"
           def dc = openshift.selector("dc", "${name}")
 
-          def patcher = [spec:[template:[spec:["containers":[{"name": "${name}", "image": "docker.io/chrismith/${name}:${tag}"}]]]]
-          def patchCmd = ["oc", "patch", "dc", hello-world, "-p", JsonOutput.toJson(patcher)]
+          def patcher = [spec:[template:[spec:[containers:[["name": "${name}", "image": "docker.io/chrismith/${name}:${tag}"]]]]]]
+          def patchCmd = ["oc", "patch", "dc", "hello-world", "-p", JsonOutput.toJson(patcher)]
           println patchCmd.join(" ")
+          def patchProc = patchCmd.execute()
+          
           //
-          dc.patch("\"{'spec':{'template':{'spec':{'containers':[{'name': '${name}', 'image':'docker.io/chrismith/${name}:${tag}'}]}}}}\"")
-          dc.rollout().latest()
+          // dc.patch("\"{'spec':{'template':{'spec':{'containers':[{'name': '${name}', 'image':'docker.io/chrismith/${name}:${tag}'}]}}}}\"")
+          // dc.rollout().latest()
           // dc.rollout().status()
         }
       }
