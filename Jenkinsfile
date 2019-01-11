@@ -39,8 +39,8 @@ node {
           }
         }
         
-          stage('Deploy') {
-            try {
+        stage('Deploy') {
+          try {
             def dc = openshift.selector("dc", "${name}")
             def patcher = [spec:[template:[spec:[containers:[["name": "${name}", "image": "docker.io/chrismith/${name}:${tag}"]]]]]]
             def patchCmd = ["'", JsonOutput.toJson(patcher), "'"]
@@ -50,7 +50,7 @@ node {
           }
           catch (err) {
           if (err.getMessage().contains('not patched')) {
-            echo "Deployment was not patched"
+            echo "Deployment was not patched, but that's not a failure"
             currentBuild.result = 'SUCCESS'
           }
           else { 
@@ -59,7 +59,7 @@ node {
             throw err
           }
         }
-        }
+      }
         
       }
     }
