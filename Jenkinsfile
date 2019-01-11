@@ -41,7 +41,7 @@ node {
         stage('Deploy') {
           // sh "sleep 10 && oc rollout latest dc/${name}"
           def dc = openshift.selector("dc", "${name}")
-          dc.patch("\"{'spec':{'template':{'spec':{'containers':[{'name': '${name}', 'image':'chrismith/${name}:${tag}'}]}}}}\"")
+          dc.patch("\"{'spec':{'template':{'spec':{'containers':[{'name': '${name}', 'image':'docker.io/chrismith/${name}:${tag}'}]}}}}\"")
           dc.rollout().latest()
           // dc.rollout().status()
         }
