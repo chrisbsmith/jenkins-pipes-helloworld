@@ -26,20 +26,14 @@ node {
           }
           build.logs("-f")
 
-          // withCredentials([usernamePassword(credentialsId: 'jenkins-dockerhub-userpass',
-          //                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-
-          
-          // println(env.USERNAME)
-          //   }
-          // withCredentials([file(credentialsId: 'jenkins-dockerhub-jsonfile', variable: 'DOCKERHUBCREDS')]) {
-          //   sh '''
-          //     #!/bin/bash
-          //     mkdir ~/.docker
-          //     cp ${DOCKERHUBCREDS} ~/.docker/config.json
-          //   '''
-          //   sh "oc image mirror docker.io/chrismith/${name}:openshift docker.io/chrismith/${name}:${tag}"
-          // }
+          withCredentials([file(credentialsId: 'jenkins-dockerhub-jsonfile', variable: 'DOCKERHUBCREDS')]) {
+            sh '''
+              #!/bin/bash
+              mkdir ~/.docker
+              cp ${DOCKERHUBCREDS} ~/.docker/config.json
+            '''
+            sh "oc image mirror docker.io/chrismith/${name}:openshift docker.io/chrismith/${name}:${tag}"
+          }
             
           
         }
@@ -47,6 +41,7 @@ node {
         stage('Deploy') {
           // sh "sleep 10 && oc rollout latest dc/${name}"
           def dc = openshift.selector("dc", "${name}")
+          dc.patch('{"spec":{"template":{"spec":{"containers":[{"name": "${name}", "image":"chrismith/${name}:${tag}"}]}}}}')
           dc.rollout().latest()
           // dc.rollout().status()
         }
