@@ -17,7 +17,7 @@ node {
       openshift.withProject() {
         stage('Build Image') {
           if (!openshift.selector("bc", "mapit").exists()) {
-            # This should be the equivelant of the below lines that were initially executed
+          //  This should be the equivelant of the below lines that were initially executed
           // sh "oc new-build --strategy docker --binary --docker-image golang:1.11-alpine --name ${name}"
             def newBuild = openshift.newBuild("--name ${name}", "--strategy docker", "--binary")
           }
@@ -38,14 +38,19 @@ node {
             sh "oc image mirror docker.io/chrismith/${name}:openshift docker.io/chrismith/${name}:${tag}"
           }
         }
-
-        stage('Deploy') {
-          def dc = openshift.selector("dc", "${name}")
-          def patcher = [spec:[template:[spec:[containers:[["name": "${name}", "image": "docker.io/chrismith/${name}:${tag}"]]]]]]
-          def patchCmd = ["'", JsonOutput.toJson(patcher), "'"]
-          println patchCmd.join(" ")
-          def patch = patchCmd.join(" ")
-          dc.patch("${patch}")
+        try {
+          stage('Deploy') {
+            def dc = openshift.selector("dc", "${name}")
+            def patcher = [spec:[template:[spec:[containers:[["name": "${name}", "image": "docker.io/chrismith/${name}:${tag}"]]]]]]
+            def patchCmd = ["'", JsonOutput.toJson(patcher), "'"]
+            println patchCmd.join(" ")
+            def patch = patchCmd.join(" ")
+            dc.patch("${patch}")
+          }
+        }
+        catch (err) {
+          echo "Caught error deploying"
+          throw err
         }
       }
     }
