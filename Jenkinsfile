@@ -26,15 +26,6 @@ node {
           }
           build.logs("-f")
 
-          // openshift.selector("bc", "hello-world").startBuild("--from-dir .")
-
-          // def bld = openshift.startBuild("hello-world") --from-dir . --follow
-
-          // bld.untilEach {
-          //   return it.object().status.phase == "Running"
-          // }
-          // bld.logs('-f') 
-
           // withCredentials([usernamePassword(credentialsId: 'jenkins-dockerhub-userpass',
           //                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 
@@ -52,12 +43,17 @@ node {
             
           
         }
+
+        stage('Deploy') {
+          // sh "sleep 10 && oc rollout latest dc/hello-world"
+          def dc = openshift.selector("dc", "hello-worl")
+          // dc.rollout().latest()
+          dc.rollout().status()
+        }
       }
     }
     
-    // stage('Deploy') {
-    //   sh "sleep 10 && oc rollout latest dc/hello-world"
-    // }
+
   } finally {
     stage('Cleanup') {
       echo "doing some cleanup..."
