@@ -49,8 +49,15 @@ node {
           }
         }
         catch (err) {
-          echo "Caught error deploying"
-          throw err
+          if (err.indexOf('not patched') >= -1) {
+            echo "Deployment was not patched"
+            currentBuild.result = 'SUCCESS'
+          }
+          else { 
+            echo "Caught error deploying"
+            currentBuild.result = 'UNSTABLE'
+            throw err
+          }
         }
       }
     }
