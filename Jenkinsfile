@@ -19,7 +19,8 @@ node {
 
           echo "I'm using the ${openshift.project()} project"
 
-          openshift.startBuild("hello-world --from-dir . ")
+          // openshift.startBuild("hello-world --from-dir .")
+          openshift.selector("bc", "hello-world").startBuild("--from-dir .")
 
           // def bld = openshift.startBuild("hello-world") --from-dir . --follow
 
