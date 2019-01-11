@@ -49,7 +49,7 @@ node {
           }
         }
         catch (err) {
-          if (err.indexOf('not patched') >= -1) {
+          if (err.getMessage().contains('not patched')) {
             echo "Deployment was not patched"
             currentBuild.result = 'SUCCESS'
           }
