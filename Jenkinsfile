@@ -16,18 +16,19 @@ node {
     openshift.withCluster() {
       openshift.withProject() {
         stage('Build Image') {
-          // Need to put some logic here to determine if it is a new build or an existing build and skip this step if existing.
+          if (!openshift.selector("bc", "mapit").exists()) {
+            # This should be the equivelant of the below lines that were initially executed
           // sh "oc new-build --strategy docker --binary --docker-image golang:1.11-alpine --name ${name}"
-          //sh "oc start-build ${name} --from-dir . --follow"
-
-          // echo "I'm using the ${openshift.project()} project"
+            def newBuild = openshift.newBuild("--name ${name}", "--strategy docker", "--binary")
+          }
 
           def build = openshift.startBuild("${name} --from-dir .")
           build.untilEach{
             return it.object().status.phase == "Complete"
           }
           build.logs("-f")
-
+        }
+        stage('Move Image') {
           withCredentials([file(credentialsId: 'jenkins-dockerhub-jsonfile', variable: 'DOCKERHUBCREDS')]) {
             sh '''
               #!/bin/bash
@@ -36,28 +37,25 @@ node {
             '''
             sh "oc image mirror docker.io/chrismith/${name}:openshift docker.io/chrismith/${name}:${tag}"
           }
-            
-          
         }
 
         stage('Deploy') {
-          // sh "sleep 10 && oc rollout latest dc/${name}"
           def dc = openshift.selector("dc", "${name}")
-
           def patcher = [spec:[template:[spec:[containers:[["name": "${name}", "image": "docker.io/chrismith/${name}:${tag}"]]]]]]
           def patchCmd = ["'", JsonOutput.toJson(patcher), "'"]
           println patchCmd.join(" ")
           def patch = patchCmd.join(" ")
           dc.patch("${patch}")
-          
-          // dc.rollout().latest()
-          // dc.rollout().status()
         }
       }
     }
-    
-
-  } finally {
+  } 
+  catch ( e ) {
+    echo "Caught: ${e}"
+    currentBuild.result = 'FAILURE'
+    throw e
+  }
+  finally {
     stage('Cleanup') {
       echo "doing some cleanup..."
       sh 'rm -rf ~/.docker'
