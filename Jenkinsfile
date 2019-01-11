@@ -1,4 +1,4 @@
-
+def name = "hello-world"
 def tag
 
 node {
@@ -14,12 +14,12 @@ node {
       openshift.withProject() {
         stage('Build Image') {
           // Need to put some logic here to determine if it is a new build or an existing build and skip this step if existing.
-          // sh "oc new-build --strategy docker --binary --docker-image golang:1.11-alpine --name hello-world"
-          //sh "oc start-build hello-world --from-dir . --follow"
+          // sh "oc new-build --strategy docker --binary --docker-image golang:1.11-alpine --name ${name}"
+          //sh "oc start-build ${name} --from-dir . --follow"
 
           echo "I'm using the ${openshift.project()} project"
 
-          def build = openshift.startBuild("hello-world --from-dir .")
+          def build = openshift.startBuild("${name} --from-dir .")
           build.untilEach{
             echo "phase = ${it.object().status.phase}"
             return it.object().status.phase == "Complete"
@@ -38,15 +38,15 @@ node {
           //     mkdir ~/.docker
           //     cp ${DOCKERHUBCREDS} ~/.docker/config.json
           //   '''
-          //   sh "oc image mirror docker.io/chrismith/hello-world:openshift docker.io/chrismith/hello-world:${tag}"
+          //   sh "oc image mirror docker.io/chrismith/${name}:openshift docker.io/chrismith/${name}:${tag}"
           // }
             
           
         }
 
         stage('Deploy') {
-          // sh "sleep 10 && oc rollout latest dc/hello-world"
-          def dc = openshift.selector("dc", "hello-worl")
+          // sh "sleep 10 && oc rollout latest dc/${name}"
+          def dc = openshift.selector("dc", "${name}")
           // dc.rollout().latest()
           dc.rollout().status()
         }
