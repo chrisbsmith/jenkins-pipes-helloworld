@@ -43,9 +43,11 @@ objects:
     failedBuildsHistoryLimit: 5
     nodeSelector: null
     output:
+      pushSecret:
+        name: dockerhub
       to:
-        kind: ImageStreamTag
-        name: hello-world:openshift
+        kind: DockerImage
+        name: chrismith/hello-world:openshift
     postCommit: {}
     resources: {}
     runPolicy: Serial
