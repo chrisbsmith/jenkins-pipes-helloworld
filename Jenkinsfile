@@ -17,10 +17,19 @@ node {
       withCredentials([usernamePassword(credentialsId: 'jenkins-dockerhub-userpass',
                           usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 
+      
       println(env.USERNAME)
-        }   
+        }
+      withCredentials([file(credentialsId: 'jenkins-dockerhub-json', variable: 'DOCKERHUBCREDS ')]) {
+        sh '''
+          #!/bin/bash
+          mkdir ~/.docker
+          cp ${DOCKERHUBCREDS} ~/.docker/config.json
+        '''
+        sh "oc image mirror docker.io/chrismith/hello-world:openshift docker.io/chrismith/hello-world:${tag}"
+      }
         
-      //sh "oc image mirror docker.io/chrismith/hello-world:openshift docker.io/chrismith/hello-world:${tag}"
+      
     }
     
     // stage('Deploy') {
@@ -29,6 +38,7 @@ node {
   } finally {
     stage('Cleanup') {
       echo "doing some cleanup..."
+      sh 'rm -rf ~/.docker'
     }
   }
 }
