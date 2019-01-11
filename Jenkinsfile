@@ -22,21 +22,20 @@ node {
 
           // echo "I'm using the ${openshift.project()} project"
 
-          // def build = openshift.startBuild("${name} --from-dir .")
-          // build.untilEach{
-          //   echo "phase = ${it.object().status.phase}"
-          //   return it.object().status.phase == "Complete"
-          // }
-          // build.logs("-f")
+          def build = openshift.startBuild("${name} --from-dir .")
+          build.untilEach{
+            return it.object().status.phase == "Complete"
+          }
+          build.logs("-f")
 
-          // withCredentials([file(credentialsId: 'jenkins-dockerhub-jsonfile', variable: 'DOCKERHUBCREDS')]) {
-          //   sh '''
-          //     #!/bin/bash
-          //     mkdir ~/.docker
-          //     cp ${DOCKERHUBCREDS} ~/.docker/config.json
-          //   '''
-          //   sh "oc image mirror docker.io/chrismith/${name}:openshift docker.io/chrismith/${name}:${tag}"
-          // }
+          withCredentials([file(credentialsId: 'jenkins-dockerhub-jsonfile', variable: 'DOCKERHUBCREDS')]) {
+            sh '''
+              #!/bin/bash
+              mkdir ~/.docker
+              cp ${DOCKERHUBCREDS} ~/.docker/config.json
+            '''
+            sh "oc image mirror docker.io/chrismith/${name}:openshift docker.io/chrismith/${name}:${tag}"
+          }
             
           
         }
@@ -51,8 +50,6 @@ node {
           def patch = patchCmd.join(" ")
           dc.patch("${patch}")
           
-          //
-          // dc.patch("\"{'spec':{'template':{'spec':{'containers':[{'name': '${name}', 'image':'docker.io/chrismith/${name}:${tag}'}]}}}}\"")
           // dc.rollout().latest()
           // dc.rollout().status()
         }
