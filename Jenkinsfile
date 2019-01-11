@@ -20,9 +20,10 @@ node {
           echo ${MYFILE} 
         '''
         }
-      }
+        
       //sh "oc image mirror docker.io/chrismith/hello-world:openshift docker.io/chrismith/hello-world:${tag}"
     }
+    
     stage('Deploy') {
       sh "sleep 10 && oc rollout latest dc/hello-world"
     }
